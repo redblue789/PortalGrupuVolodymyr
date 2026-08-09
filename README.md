@@ -8,3 +8,4 @@ https://docs.google.com/document/d/1aYBOR1BAyuuhR2wFrcqo6U0IlbCGI3sOLKTOnerCrus/
 
 Влад П 2.(Система автентифікації)
 Артем-Система опитувань:
+Мирослав - Події та календар подій
