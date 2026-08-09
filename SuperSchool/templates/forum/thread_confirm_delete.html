@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Видалити гілку — Форум{% endblock %}
+{% block content %}
+
+<nav aria-label="breadcrumb" class="mb-4">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'thread_list' %}"><i class="bi bi-journals me-1"></i>Форум</a></li>
+    <li class="breadcrumb-item active">Видалення</li>
+  </ol>
+</nav>
+
+<div class="row justify-content-center">
+  <div class="col-lg-5 col-md-7">
+    <div class="card" style="border-color:rgba(239,68,68,.3);">
+      <div class="card-header d-flex align-items-center gap-2"
+           style="background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.2);">
+        <i class="bi bi-exclamation-triangle-fill" style="color:var(--danger);font-size:1.1rem;"></i>
+        <span style="color:var(--danger);font-weight:700;">Підтвердження видалення</span>
+      </div>
+      <div class="card-body text-center" style="padding:2.5rem 2rem;">
+        <!-- Animated trash icon -->
+        <div style="width:72px;height:72px;background:rgba(239,68,68,.12);
+                    border:1px solid rgba(239,68,68,.25);border-radius:50%;
+                    display:flex;align-items:center;justify-content:center;
+                    margin:0 auto 1.5rem;font-size:1.8rem;color:var(--danger);
+                    animation:wiggle 2s ease-in-out infinite;">
+          🗑️
+        </div>
+
+        <p style="color:var(--text-muted);margin-bottom:.5rem;">Ви впевнені, що хочете видалити гілку?</p>
+        <p style="font-weight:800;font-size:1.1rem;color:var(--text);margin-bottom:1.5rem;">
+          &laquo;{{ thread.title }}&raquo;
+        </p>
+
+        <div class="alert alert-danger d-flex align-items-start gap-2 text-start mb-4">
+          <i class="bi bi-info-circle-fill flex-shrink-0 mt-1"></i>
+          <span>
+            Разом із гілкою буде назавжди видалено
+            <strong>{{ thread.posts.count }} повідомлень</strong>.
+            Цю дію неможливо скасувати! 💀
+          </span>
+        </div>
+
+        <div class="d-flex justify-content-center gap-3">
+          <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger px-4">
+              <i class="bi bi-trash me-1"></i>Так, видалити
+            </button>
+          </form>
+          <a href="{% url 'thread_list' %}" class="btn btn-outline-secondary px-4">
+            Скасувати
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

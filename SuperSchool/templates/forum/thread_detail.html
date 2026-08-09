@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block title %}{{ thread.title }} — Форум{% endblock %}
+{% block content %}
+
+<nav aria-label="breadcrumb" class="mb-4">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'thread_list' %}"><i class="bi bi-journals me-1"></i>Форум</a></li>
+    <li class="breadcrumb-item active" style="max-width:380px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+      {{ thread.title }}
+    </li>
+  </ol>
+</nav>
+
+<!-- Thread header card -->
+<div class="card mb-4">
+  <div class="card-header d-flex justify-content-between align-items-start gap-3 flex-wrap">
+    <div>
+      <h4 style="font-weight:800;letter-spacing:-.3px;color:var(--text);margin-bottom:.4rem;">
+        💬 {{ thread.title }}
+      </h4>
+      <div style="display:flex;flex-wrap:wrap;gap:.4rem;">
+        <span class="meta-chip"><i class="bi bi-person"></i>{{ thread.created_by.username }}</span>
+        <span class="meta-chip"><i class="bi bi-calendar3"></i>{{ thread.created_at|date:"d.m.Y H:i" }}</span>
+        <span class="meta-chip"><i class="bi bi-chat-dots"></i>{{ posts.count }} повідомлень</span>
+      </div>
+    </div>
+    {% if user.is_staff or user.is_superuser %}
+    <div class="d-flex gap-2 flex-shrink-0">
+      <a href="{% url 'edit_thread' thread.pk %}" class="btn btn-sm btn-outline-secondary">
+        <i class="bi bi-pencil me-1"></i>Редагувати
+      </a>
+      <a href="{% url 'delete_thread' thread.pk %}" class="btn btn-sm btn-outline-danger">
+        <i class="bi bi-trash me-1"></i>Видалити
+      </a>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Posts -->
+<section class="mb-4">
+  {% if posts %}
+    {% for post in posts %}
+    <div class="post-card">
+      <div class="d-flex align-items-start gap-3">
+        <div class="avatar">{{ post.author.username|slice:":1"|upper }}</div>
+        <div class="flex-grow-1">
+          <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-1">
+            <div class="d-flex align-items-center gap-2">
+              <span style="font-weight:700;color:var(--text);">{{ post.author.username }}</span>
+              {% if post.author.is_superuser %}
+                <span class="badge bg-danger badge-role">Адмін</span>
+              {% elif post.author.is_staff %}
+                <span class="badge bg-warning text-dark badge-role">Модератор</span>
+              {% endif %}
+            </div>
+            <span style="font-size:.75rem;color:var(--text-muted);">
+              <i class="bi bi-clock me-1"></i>{{ post.created_at|date:"d.m.Y H:i" }}
+            </span>
+          </div>
+          <p class="post-content mb-0">{{ post.content }}</p>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  {% else %}
+    <div class="empty-state">
+      <i class="bi bi-chat-square empty-icon"></i>
+      <p style="font-weight:600;">Повідомлень ще немає</p>
+      <p style="font-size:.85rem;">Будь першим хто напише! 🚀</p>
+    </div>
+  {% endif %}
+</section>
+
+<!-- Reply box -->
+<div class="card" id="reply">
+  {% if user.is_authenticated %}
+    <div class="card-header d-flex align-items-center gap-2">
+      <div class="avatar" style="width:30px;height:30px;font-size:.75rem;">
+        {{ user.username|slice:":1"|upper }}
+      </div>
+      <span style="color:var(--text);">✍️ Написати повідомлення</span>
+    </div>
+    <div class="card-body" style="padding:1.5rem;">
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger mb-3">{{ form.non_field_errors }}</div>
+        {% endif %}
+        <div class="mb-3">
+          <label class="form-label">Текст повідомлення</label>
+          <textarea name="{{ form.content.html_name }}" id="{{ form.content.id_for_label }}"
+                    class="form-control {% if form.content.errors %}is-invalid{% endif %}"
+                    rows="4" placeholder="Напишіть щось цікаве...">{{ form.content.value|default_if_none:"" }}</textarea>
+          {% if form.content.errors %}
+            <div class="invalid-feedback">{% for e in form.content.errors %}{{ e }}{% endfor %}</div>
+          {% endif %}
+        </div>
+        <button type="submit" class="btn btn-primary">
+          <i class="bi bi-send me-1"></i>Надіслати
+        </button>
+      </form>
+    </div>
+  {% else %}
+    <div class="card-body empty-state py-4">
+      <i class="bi bi-lock empty-icon" style="font-size:2.5rem;"></i>
+      <p style="font-weight:600;margin-bottom:.5rem;">Потрібно увійти</p>
+      <p style="font-size:.85rem;margin-bottom:1rem;">Щоб писати повідомлення, увійдіть в систему 🔐</p>
+      <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-primary btn-sm">
+        <i class="bi bi-box-arrow-in-right me-1"></i>Увійти
+      </a>
+    </div>
+  {% endif %}
+</div>
+
+{% endblock %}
