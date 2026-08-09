@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Електронний щоденник — Logika</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #121418;
+            --card-bg: #1a1d24;
+            --card-stroke: rgba(255, 255, 255, 0.08);
+            --text-primary: #f0f3f8;
+            --text-secondary: #8a94a6;
+            --accent-green: #00e676;
+            --accent-green-glow: rgba(0, 230, 118, 0.35);
+            --accent-blue: #0070f3;
+            --accent-red: #ff3b30;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        /* Шапка з 3D ефектом */
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: linear-gradient(145deg, #1e222a, #16181f);
+            padding: 24px 30px;
+            border-radius: 20px;
+            border: 1px solid var(--card-stroke);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 0%, #a0aab8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+            text-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        /* Об'ємні 3D Кнопки */
+        .btn {
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            padding: 12px 20px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            position: relative;
+            outline: none;
+        }
+
+        .btn-add-student {
+            background: linear-gradient(180deg, #0077ff 0%, #0055cc 100%);
+            box-shadow: 0 6px 0 #003b99,
+                        0 12px 20px rgba(0, 119, 255, 0.35);
+        }
+
+        .btn-add-student:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 0 #003b99,
+                        0 16px 25px rgba(0, 119, 255, 0.45);
+        }
+
+        .btn-add-student:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #003b99,
+                        0 4px 10px rgba(0, 119, 255, 0.2);
+        }
+
+        /* Головна Таблиця */
+        .table-wrapper {
+            background: linear-gradient(145deg, #181b22, #14161c);
+            border-radius: 20px;
+            border: 1px solid var(--card-stroke);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 18px 24px;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--card-stroke);
+        }
+
+        td {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--card-stroke);
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .student-name {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .student-desc {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .class-badge {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #a0aab8;
+        }
+
+        /* 3D Неонова Оцінка */
+        .grade-badge {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(145deg, #00f076, #00b359);
+            color: #052010;
+            font-weight: 800;
+            font-size: 0.95rem;
+            padding: 6px 12px;
+            border-radius: 10px;
+            margin: 4px;
+            box-shadow: 0 4px 0 #00803f,
+                        0 6px 15px var(--accent-green-glow);
+            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+
+        .btn-delete-grade {
+            background: none;
+            border: none;
+            color: rgba(5, 32, 16, 0.6);
+            margin-left: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 900;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .btn-delete-grade:hover {
+            color: #ff3b30;
+        }
+
+        /* Маленька 3D кнопка + Оцінка */
+        .btn-add-grade {
+            background: linear-gradient(180deg, #2c3240 0%, #1e222d 100%);
+            color: #58a6ff;
+            border: 1px solid rgba(88, 166, 255, 0.2);
+            box-shadow: 0 4px 0 #12151c;
+            padding: 7px 12px;
+            font-size: 0.8rem;
+            margin-left: 8px;
+        }
+
+        .btn-add-grade:hover {
+            transform: translateY(-1px);
+            background: linear-gradient(180deg, #343b4c 0%, #242936 100%);
+            box-shadow: 0 5px 0 #12151c, 0 4px 12px rgba(88, 166, 255, 0.2);
+        }
+
+        .btn-add-grade:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #12151c;
+        }
+
+        /* 3D Кнопка Видалити */
+        .btn-delete-student {
+            background: linear-gradient(180deg, #ff453a 0%, #c92a20 100%);
+            box-shadow: 0 4px 0 #801812, 0 6px 15px rgba(255, 59, 48, 0.3);
+            font-size: 0.75rem;
+            padding: 6px 10px;
+            border-radius: 8px;
+        }
+
+        .btn-delete-student:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 0 #801812, 0 8px 18px rgba(255, 59, 48, 0.4);
+        }
+
+        .btn-delete-student:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #801812;
+        }
+
+        /* 3D Модальні Вікна */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: linear-gradient(145deg, #1e222b, #15181e);
+            border: 1px solid var(--card-stroke);
+            border-radius: 24px;
+            padding: 32px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            animation: modalUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes modalUp {
+            from { transform: translateY(30px) scale(0.95); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
+        }
+
+        .modal-content h3 {
+            margin: 0 0 20px 0;
+            font-size: 1.4rem;
+            color: #fff;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            background: #111317;
+            border: 1px solid var(--card-stroke);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: #fff;
+            font-size: 0.95rem;
+            outline: none;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: #0077ff;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5), 0 0 12px rgba(0, 119, 255, 0.3);
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .btn-close {
+            background: #2a2e39;
+            color: var(--text-secondary);
+            box-shadow: 0 4px 0 #181a20;
+        }
+
+        .btn-close:hover {
+            background: #343946;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+
+        <div class="header-container">
+            <h1>📘 Електронний щоденник Logika</h1>
+            <button class="btn btn-add-student" onclick="openStudentModal()">
+                <span>+</span> Додати учня
+            </button>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Учень</th>
+                        <th>Група</th>
+                        <th>Оцінки (Програмування)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <span class="student-name">{{ student.last_name }} {{ student.first_name }}</span>
+                                    {% if student.description %}
+                                        <span class="student-desc">{{ student.description }}</span>
+                                    {% endif %}
+                                </div>
+                                <form method="POST" style="margin: 0;" onsubmit="return confirm('Видалити учня {{ student.last_name }} {{ student.first_name }}?');">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="action" value="delete_student">
+                                    <input type="hidden" name="student_id" value="{{ student.id }}">
+                                    <button type="submit" class="btn btn-delete-student" title="Видалити учня">🗑️</button>
+                                </form>
+                            </div>
+                        </td>
+                        <td><span class="class-badge">{{ student.grade_level }}</span></td>
+                        <td>
+                            {% for grade in student.grades.all %}
+                                <span class="grade-badge">
+                                    {{ grade.score }}
+                                    <form method="POST" style="display: inline;" onsubmit="return confirm('Видалити оцінку {{ grade.score }}?');">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="action" value="delete_grade">
+                                        <input type="hidden" name="grade_id" value="{{ grade.id }}">
+                                        <button type="submit" class="btn-delete-grade" title="Видалити оцінку">✕</button>
+                                    </form>
+                                </span>
+                            {% empty %}
+                                <span style="color: var(--text-secondary); font-size: 0.85rem; margin-right: 6px;">Немає оцінок</span>
+                            {% endfor %}
+                            <button class="btn btn-add-grade" onclick="openGradeModal('{{ student.id }}', '{{ student.last_name }} {{ student.first_name }}')">+ Оцінка</button>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" style="text-align: center; color: var(--text-secondary); padding: 40px;">
+                            Учнів у групі Logika поки немає. Натисніть кнопку "+ Додати учня".
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <div id="studentModal" class="modal">
+        <div class="modal-content">
+            <h3>Новий учень</h3>
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="add_student">
+                <div class="form-group">
+                    <label>Ім'я</label>
+                    <input type="text" name="first_name" placeholder="Введіть ім'я" required autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label>Прізвище</label>
+                    <input type="text" name="last_name" placeholder="Введіть прізвище" required autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label>Примітка (за бажанням)</label>
+                    <textarea name="description" rows="3" placeholder="Коротка інформація..."></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-close" onclick="closeStudentModal()">Скасувати</button>
+                    <button type="submit" class="btn btn-add-student">Зберегти</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="gradeModal" class="modal">
+        <div class="modal-content">
+            <h3>Поставити оцінку</h3>
+            <p id="modalStudentName" style="font-weight: 700; color: #0077ff; margin-top: -10px; margin-bottom: 20px;"></p>
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="add_grade">
+                <input type="hidden" name="student_id" id="modalStudentId">
+                <div class="form-group">
+                    <label>Бал (від 1 до 100)</label>
+                    <input type="number" name="score" min="1" max="100" placeholder="100" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-close" onclick="closeGradeModal()">Скасувати</button>
+                    <button type="submit" class="btn btn-add-student">Додати</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openStudentModal() {
+            document.getElementById('studentModal').style.display = 'flex';
+        }
+        function closeStudentModal() {
+            document.getElementById('studentModal').style.display = 'none';
+        }
+
+        function openGradeModal(studentId, studentName) {
+            document.getElementById('modalStudentId').value = studentId;
+            document.getElementById('modalStudentName').innerText = studentName;
+            document.getElementById('gradeModal').style.display = 'flex';
+        }
+        function closeGradeModal() {
+            document.getElementById('gradeModal').style.display = 'none';
+        }
+    </script>
+
+</body>
+</html>
