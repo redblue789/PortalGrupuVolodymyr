@@ -1,0 +1,18 @@
+{% extends 'surveys/base.html' %}
+{% block title %}{{ survey.title }}{% endblock %}
+{% block content %}
+    <a href="{% url 'surveys:list' %}" class="btn btn-link px-0">&larr; Усі опитування</a>
+    <h1>{{ survey.title }}</h1>
+    <p class="lead">{{ survey.description }}</p>
+    <p class="text-muted">Кількість сторінок: {{ survey.pages_count }} · Кількість питань: {{ survey.questions_count }}</p>
+
+    {% if already_passed %}
+        <div class="alert alert-info">
+            Ви вже проходили це опитування раніше. Ви можете пройти його ще раз — збережеться лише останній результат.
+        </div>
+    {% endif %}
+
+    <a href="{% url 'surveys:take_start' survey.slug %}" class="btn btn-primary btn-lg">
+        {% if already_passed %}Пройти знову{% else %}Почати опитування{% endif %}
+    </a>
+{% endblock %}

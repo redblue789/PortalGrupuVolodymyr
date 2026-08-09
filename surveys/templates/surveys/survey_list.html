@@ -1,0 +1,28 @@
+{% extends 'surveys/base.html' %}
+{% block title %}Опитування{% endblock %}
+{% block content %}
+    <h1 class="mb-4">Доступні опитування</h1>
+
+    {% if surveys %}
+        <div class="row g-3">
+            {% for survey in surveys %}
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">{{ survey.title }}</h5>
+                            <p class="card-text text-muted flex-grow-1">{{ survey.description|truncatewords:20 }}</p>
+                            {% if survey.pk in passed_ids %}
+                                <span class="badge bg-success mb-2 align-self-start">Ви вже проходили</span>
+                            {% endif %}
+                            <a href="{% url 'surveys:detail' survey.slug %}" class="btn btn-primary mt-auto">
+                                {% if survey.pk in passed_ids %}Переглянути / пройти знову{% else %}Пройти опитування{% endif %}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-muted">Наразі немає доступних опитувань.</p>
+    {% endif %}
+{% endblock %}
