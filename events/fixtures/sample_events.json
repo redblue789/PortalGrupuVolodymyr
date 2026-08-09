@@ -1,0 +1,72 @@
+[
+  {
+    "model": "events.event",
+    "pk": 1,
+    "fields": {
+      "title": "Відкрита зустріч учасників групи",
+      "description": "Обговорюємо плани на осінь та збираємо ідеї для нових ініціатив.",
+      "date": "2026-08-12",
+      "time": "18:30:00",
+      "location": "Спільнотний центр, вул. Шевченка 12",
+      "category": "meeting",
+      "status": "planned",
+      "created_by": null
+    }
+  },
+  {
+    "model": "events.event",
+    "pk": 2,
+    "fields": {
+      "title": "Воркшоп з фасилітації дискусій",
+      "description": "Практичне заняття для тих, хто веде зустрічі та обговорення в групі.",
+      "date": "2026-08-14",
+      "time": "16:00:00",
+      "location": "Онлайн, Zoom",
+      "category": "workshop",
+      "status": "planned",
+      "created_by": null
+    }
+  },
+  {
+    "model": "events.event",
+    "pk": 3,
+    "fields": {
+      "title": "Онлайн-звіт про діяльність за квартал",
+      "description": "Підсумки роботи групи та відповіді на запитання учасників.",
+      "date": "2026-08-17",
+      "time": "19:00:00",
+      "location": "Онлайн-трансляція",
+      "category": "online",
+      "status": "planned",
+      "created_by": null
+    }
+  },
+  {
+    "model": "events.event",
+    "pk": 4,
+    "fields": {
+      "title": "Осінній фестиваль спільноти",
+      "description": "Щорічна подія з майстер-класами, музикою та ярмарком.",
+      "date": "2026-08-24",
+      "time": "12:00:00",
+      "location": "Парк культури, головна алея",
+      "category": "festival",
+      "status": "planned",
+      "created_by": null
+    }
+  },
+  {
+    "model": "events.event",
+    "pk": 5,
+    "fields": {
+      "title": "Загальні збори координаторів",
+      "description": "Розподіл обов'язків на наступний період.",
+      "date": "2026-08-05",
+      "time": "17:00:00",
+      "location": "Офіс групи, кімната 3",
+      "category": "board",
+      "status": "done",
+      "created_by": null
+    }
+  }
+]

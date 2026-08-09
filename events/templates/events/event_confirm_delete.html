@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Видалити подію{% endblock %}
+
+{% block content %}
+  <div class="modal-page">
+    <h2>Видалити подію?</h2>
+    <div class="hint">Дію не можна скасувати.</div>
+
+    <div class="confirm-box" style="margin-bottom:20px;">
+      Ви збираєтесь видалити «{{ event.title }}» ({{ event.date|date:"d.m.Y" }}, {{ event.time|time:"H:i" }}).
+    </div>
+
+    <form method="post">
+      {% csrf_token %}
+      <div class="modal-actions">
+        <a class="btn btn-ghost" href="{% url 'events:feed' %}">Скасувати</a>
+        <button type="submit" class="btn btn-danger">Так, видалити</button>
+      </div>
+    </form>
+  </div>
+{% endblock %}
