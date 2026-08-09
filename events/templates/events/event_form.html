@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}{% if is_edit %}Редагувати подію{% else %}Нова подія{% endif %}{% endblock %}
+
+{% block content %}
+  <div class="modal-page">
+    <h2>{% if is_edit %}Редагувати подію{% else %}Нова подія{% endif %}</h2>
+    <div class="hint">Заповніть поля — подія одразу з'явиться у стрічці та календарі.</div>
+
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="field">
+        <label for="{{ form.title.id_for_label }}">Назва події</label>
+        {{ form.title }}
+        {% if form.title.errors %}<div class="field-error">{{ form.title.errors|join:", " }}</div>{% endif %}
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="{{ form.date.id_for_label }}">Дата</label>
+          {{ form.date }}
+          {% if form.date.errors %}<div class="field-error">{{ form.date.errors|join:", " }}</div>{% endif %}
+        </div>
+        <div class="field">
+          <label for="{{ form.time.id_for_label }}">Час</label>
+          {{ form.time }}
+          {% if form.time.errors %}<div class="field-error">{{ form.time.errors|join:", " }}</div>{% endif %}
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="{{ form.category.id_for_label }}">Категорія</label>
+          {{ form.category }}
+        </div>
+        <div class="field">
+          <label for="{{ form.status.id_for_label }}">Статус</label>
+          {{ form.status }}
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="{{ form.location.id_for_label }}">Місце проведення</label>
+        {{ form.location }}
+      </div>
+
+      <div class="field">
+        <label for="{{ form.description.id_for_label }}">Опис</label>
+        {{ form.description }}
+      </div>
+
+      <div class="modal-actions">
+        <a class="btn btn-ghost" href="{% url 'events:feed' %}">Скасувати</a>
+        <button type="submit" class="btn btn-primary">{% if is_edit %}Зберегти зміни{% else %}Зберегти подію{% endif %}</button>
+      </div>
+    </form>
+  </div>
+{% endblock %}
