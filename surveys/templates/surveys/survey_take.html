@@ -1,0 +1,36 @@
+{% extends 'surveys/base.html' %}
+{% block title %}{{ survey.title }} — крок {{ step }}{% endblock %}
+{% block content %}
+    <h1>{{ survey.title }}</h1>
+
+    <div class="progress mb-3" style="height: 8px;">
+        <div class="progress-bar" role="progressbar" style="width: {{ progress_percent }}%;"></div>
+    </div>
+    <p class="text-muted">Сторінка {{ step }} з {{ total_steps }}{% if page.title %} — {{ page.title }}{% endif %}</p>
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="mb-4">
+                <label class="form-label fw-semibold">
+                    {{ field.label }}{% if field.field.required %} <span class="text-danger">*</span>{% endif %}
+                </label>
+                {{ field }}
+                {% if field.errors %}
+                    <div class="text-danger small mt-1">{{ field.errors }}</div>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <div class="d-flex justify-content-between">
+            {% if has_previous %}
+                <a href="{% url 'surveys:take' survey.slug step|add:'-1' %}" class="btn btn-outline-secondary">Назад</a>
+            {% else %}
+                <span></span>
+            {% endif %}
+            <button type="submit" class="btn btn-primary">
+                {% if is_last_step %}Завершити опитування{% else %}Далі{% endif %}
+            </button>
+        </div>
+    </form>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends 'surveys/base.html' %}
+{% block title %}Дякуємо!{% endblock %}
+{% block content %}
+    <div class="text-center py-5">
+        <h1 class="mb-3">Дякуємо за участь!</h1>
+        <p class="lead">Ваші відповіді на опитування «{{ survey.title }}» збережено.</p>
+        <a href="{% url 'surveys:list' %}" class="btn btn-primary mt-3">До списку опитувань</a>
+    </div>
+{% endblock %}

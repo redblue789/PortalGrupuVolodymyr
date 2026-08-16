@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Видалити голосування{% endblock %}
+
+{% block content %}
+<div class="container mt-4" style="max-width: 500px;">
+    <div class="card border-danger">
+        <div class="card-header bg-danger text-white">
+            Підтвердження видалення
+        </div>
+        <div class="card-body">
+            <p>Ви впевнені, що хочете видалити голосування <strong>«{{ vote.title }}»</strong>?</p>
+            <p class="text-muted small">Усі голоси користувачів також будуть видалені.</p>
+            <form method="post">
+                {% csrf_token %}
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-danger">Так, видалити</button>
+                    <a href="{% url 'voting:vote_detail' vote.pk %}" class="btn btn-outline-secondary">Скасувати</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

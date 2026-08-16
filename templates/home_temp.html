@@ -1,0 +1,40 @@
+<!--
+    ТИМЧАСОВА головна сторінка.
+    Коли буде готова справжня головна сторінка порталу (розділ "Головна" —
+    Олег), цей файл і url 'home' в PortalGroup/urls.py можна прибрати —
+    кнопку відкриття Системи опитувань достатньо перенести туди.
+-->
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PortalGrupuVolodymyr</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container py-5">
+    <h1 class="mb-4">Портал групи</h1>
+    <p class="text-muted mb-5">Тимчасова головна сторінка — розділи порталу з'являтимуться тут поступово.</p>
+
+    <div class="d-flex flex-wrap gap-3">
+        <a href="{% url 'surveys:list' %}" class="btn btn-primary btn-lg px-4">
+            Система опитувань
+        </a>
+        {% if user.is_staff %}
+            <a href="{% url 'admin:index' %}" class="btn btn-outline-secondary btn-lg px-4">
+                Адмін-панель
+            </a>
+        {% endif %}
+        {% if user.is_authenticated %}
+            <form method="post" action="{% url 'logout' %}" class="m-0">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-danger btn-lg px-4">Вийти</button>
+            </form>
+        {% else %}
+            <a href="{% url 'login' %}" class="btn btn-outline-secondary btn-lg px-4">Увійти</a>
+        {% endif %}
+    </div>
+</div>
+</body>
+</html>
