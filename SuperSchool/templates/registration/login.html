@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}Вхід — Портал Групи{% endblock %}
+{% block content %}
+
+<div class="row justify-content-center">
+  <div class="col-lg-4 col-md-6 col-sm-9">
+    <div class="text-center mb-4">
+      <div style="width:68px;height:68px;background:linear-gradient(135deg,var(--primary),var(--accent));
+                  border-radius:18px;display:flex;align-items:center;justify-content:center;
+                  font-size:1.8rem;color:#fff;margin:0 auto .9rem;
+                  box-shadow:0 0 30px var(--primary-glow);animation:pulse-glow 3s ease-in-out infinite;">
+        🎓
+      </div>
+      <h3 style="font-weight:800;background:linear-gradient(135deg,var(--text),var(--primary));
+                 -webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.4px;">
+        Портал Групи
+      </h3>
+      <p style="color:var(--text-muted);font-size:.88rem;margin-top:.25rem;">Увійдіть у свій обліковий запис ✨</p>
+    </div>
+
+    <div class="card">
+      <div class="card-body" style="padding:2rem;">
+        <form method="post" novalidate>
+          {% csrf_token %}
+          {% if form.non_field_errors %}
+          <div class="alert alert-danger d-flex align-items-center gap-2 mb-3">
+            <i class="bi bi-exclamation-circle-fill"></i>
+            <span>{% for e in form.non_field_errors %}{{ e }}{% endfor %}</span>
+          </div>
+          {% endif %}
+
+          <div class="mb-3">
+            <label for="{{ form.username.id_for_label }}" class="form-label">Ім'я користувача</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-person"></i></span>
+              <input type="text" name="{{ form.username.html_name }}" id="{{ form.username.id_for_label }}"
+                     class="form-control {% if form.username.errors %}is-invalid{% endif %}"
+                     placeholder="Введіть логін" autofocus>
+              {% if form.username.errors %}<div class="invalid-feedback">{% for e in form.username.errors %}{{ e }}{% endfor %}</div>{% endif %}
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label for="{{ form.password.id_for_label }}" class="form-label">Пароль</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-lock"></i></span>
+              <input type="password" name="{{ form.password.html_name }}" id="{{ form.password.id_for_label }}"
+                     class="form-control {% if form.password.errors %}is-invalid{% endif %}"
+                     placeholder="Введіть пароль">
+              {% if form.password.errors %}<div class="invalid-feedback">{% for e in form.password.errors %}{{ e }}{% endfor %}</div>{% endif %}
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100" style="padding:.65rem;font-size:.95rem;">
+            <i class="bi bi-box-arrow-in-right me-2"></i>Увійти 🚀
+          </button>
+        </form>
+
+        <details class="mt-4" style="font-size:.82rem;">
+          <summary style="cursor:pointer;font-weight:700;color:var(--primary);list-style:none;display:flex;align-items:center;gap:.4rem;">
+            <i class="bi bi-people-fill"></i> Демо-акаунти
+          </summary>
+          <div style="margin-top:.75rem;display:grid;gap:.35rem;">
+            {% for row in ""|ljust:"5" %}{% endfor %}
+            <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-xs);padding:.5rem .75rem;display:flex;justify-content:space-between;align-items:center;">
+              <span>🛡️ <strong>admin</strong> <span style="color:var(--text-muted);font-size:.75rem;">Адмін</span></span>
+              <code style="background:rgba(139,92,246,.1);padding:.15rem .4rem;border-radius:4px;color:var(--primary);">admin123</code>
+            </div>
+            <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-xs);padding:.5rem .75rem;display:flex;justify-content:space-between;align-items:center;">
+              <span>⚡ <strong>moderator</strong> <span style="color:var(--text-muted);font-size:.75rem;">Модератор</span></span>
+              <code style="background:rgba(139,92,246,.1);padding:.15rem .4rem;border-radius:4px;color:var(--primary);">mod123</code>
+            </div>
+            <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-xs);padding:.5rem .75rem;display:flex;justify-content:space-between;align-items:center;">
+              <span>🎓 <strong>olena_k</strong> <span style="color:var(--text-muted);font-size:.75rem;">Студент</span></span>
+              <code style="background:rgba(139,92,246,.1);padding:.15rem .4rem;border-radius:4px;color:var(--primary);">olena123</code>
+            </div>
+            <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-xs);padding:.5rem .75rem;display:flex;justify-content:space-between;align-items:center;">
+              <span>🎓 <strong>dmytro_p</strong> <span style="color:var(--text-muted);font-size:.75rem;">Студент</span></span>
+              <code style="background:rgba(139,92,246,.1);padding:.15rem .4rem;border-radius:4px;color:var(--primary);">dmytro123</code>
+            </div>
+            <div style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-xs);padding:.5rem .75rem;display:flex;justify-content:space-between;align-items:center;">
+              <span>🎓 <strong>sofia_m</strong> <span style="color:var(--text-muted);font-size:.75rem;">Студент</span></span>
+              <code style="background:rgba(139,92,246,.1);padding:.15rem .4rem;border-radius:4px;color:var(--primary);">sofia123</code>
+            </div>
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

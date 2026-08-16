@@ -1,0 +1,74 @@
+{% extends "events/base.html" %}
+
+{% block title %}Календар{% endblock %}
+
+{% block content %}
+
+  <div class="cal-head">
+    <h2>{{ month_label }}</h2>
+    <div class="cal-nav">
+      <a class="btn btn-sm" href="?year={{ prev_year }}&month={{ prev_month }}">←</a>
+      <a class="btn btn-sm" href="{% url 'events:calendar' %}">сьогодні</a>
+      <a class="btn btn-sm" href="?year={{ next_year }}&month={{ next_month }}">→</a>
+    </div>
+  </div>
+
+  {% if can_manage %}
+    <div class="toolbar" style="justify-content:flex-end;">
+      <a class="btn btn-primary" href="{% url 'events:event_add' %}">+ Додати подію</a>
+    </div>
+  {% endif %}
+
+  <div class="cal-grid">
+    {% for label in dow_labels %}<div class="cal-dow">{{ label }}</div>{% endfor %}
+  </div>
+
+  <div class="cal-grid">
+    {% for week in weeks %}
+      {% for cell in week %}
+        <a class="cal-cell {% if not cell.in_month %}out{% endif %} {% if cell.is_today %}today{% endif %} {% if selected_day == cell.date|date:'Y-m-d' %}selected{% endif %}"
+           href="?year={{ year }}&month={{ month }}&day={{ cell.date|date:'Y-m-d' }}">
+          <span class="num">{{ cell.day }}</span>
+          <div class="cal-dots">
+            {% for e in cell.events|slice:":4" %}
+              <span class="dot-{{ e.category }}"></span>
+            {% endfor %}
+          </div>
+        </a>
+      {% endfor %}
+    {% endfor %}
+  </div>
+
+  {% if selected_day %}
+    <div class="day-panel">
+      <h3>{{ selected_day }}</h3>
+      {% if selected_events %}
+        {% for event in selected_events %}
+          <div class="row {% if event.status == 'cancelled' %}cancelled{% endif %}">
+            <div class="row-date"><div class="day">{{ event.time|time:"H:i" }}</div></div>
+            <div class="row-body">
+              <div class="row-top">
+                <p class="row-title">{{ event.title }}</p>
+                <span class="tag tag-{{ event.category }}">{{ event.get_category_display }}</span>
+                <span class="status">{{ event.get_status_display }}</span>
+              </div>
+              <div class="row-meta"><span>📍 {{ event.location|default:"—" }}</span></div>
+            </div>
+            {% if can_manage %}
+              <div class="row-actions">
+                <a class="btn btn-sm" href="{% url 'events:event_edit' event.pk %}">Редагувати</a>
+                <a class="btn btn-danger btn-sm" href="{% url 'events:event_delete' event.pk %}">Видалити</a>
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty" style="padding:24px;">
+          <div class="big">на цей день нічого немає</div>
+          {% if can_manage %}Додайте подію на цю дату кнопкою вгорі.{% endif %}
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+
+{% endblock %}

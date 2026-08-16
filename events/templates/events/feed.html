@@ -1,0 +1,67 @@
+{% extends "events/base.html" %}
+
+{% block title %}Стрічка подій{% endblock %}
+
+{% block content %}
+
+  <div class="toolbar">
+    <div class="filters">
+      <a class="chip {% if not active_category %}active{% endif %}" href="?{% if query %}q={{ query }}{% endif %}">Усі</a>
+      {% for value, label in categories %}
+        <a class="chip {% if active_category == value %}active{% endif %}"
+           href="?category={{ value }}{% if query %}&q={{ query }}{% endif %}">{{ label }}</a>
+      {% endfor %}
+    </div>
+    <div class="toolbar-right">
+      <form method="get" class="search-form">
+        {% if active_category %}<input type="hidden" name="category" value="{{ active_category }}">{% endif %}
+        <input class="search" type="text" name="q" value="{{ query }}" placeholder="Пошук за назвою чи місцем…">
+      </form>
+      {% if can_manage %}
+        <a class="btn btn-primary" href="{% url 'events:event_add' %}">+ Додати подію</a>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if events %}
+    {% for event in events %}
+      {% ifchanged event.date.month %}
+        <div class="month-label">{{ event.date|date:"F Y" }}</div>
+      {% endifchanged %}
+      <div class="row {% if event.status == 'cancelled' %}cancelled{% endif %}">
+        <div class="row-date">
+          <div class="day">{{ event.date|date:"d" }}</div>
+          <div class="mon">{{ event.date|date:"M" }}</div>
+        </div>
+        <div class="row-body">
+          <div class="row-top">
+            <p class="row-title">{{ event.title }}</p>
+            <span class="tag tag-{{ event.category }}">{{ event.get_category_display }}</span>
+            <span class="status">{{ event.get_status_display }}</span>
+          </div>
+          <div class="row-meta">
+            <span>⏱ {{ event.time|time:"H:i" }}</span>
+            <span>📍 {{ event.location|default:"—" }}</span>
+          </div>
+          {% if event.description %}<div class="row-desc">{{ event.description }}</div>{% endif %}
+        </div>
+        {% if can_manage %}
+          <div class="row-actions">
+            <a class="btn btn-sm" href="{% url 'events:event_edit' event.pk %}">Редагувати</a>
+            <a class="btn btn-danger btn-sm" href="{% url 'events:event_delete' event.pk %}">Видалити</a>
+          </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  {% else %}
+    <div class="empty">
+      <div class="big">нічого не знайдено</div>
+      {% if can_manage %}
+        Подій за цим фільтром немає. Додайте нову — і вона з'явиться тут.
+      {% else %}
+        Подій за цим фільтром поки немає. Перевірте пізніше.
+      {% endif %}
+    </div>
+  {% endif %}
+
+{% endblock %}

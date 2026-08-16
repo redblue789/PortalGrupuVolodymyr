@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Табло подій{% endblock %} — Портал Групи</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'events/css/style.css' %}">
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <a href="{% url 'events:feed' %}" class="brand">
+      <span class="dot"></span>
+      <div>
+        <h1>Табло подій</h1>
+        <div class="sub">портал групи · події та календар</div>
+      </div>
+    </a>
+    <div class="account">
+      {% if user.is_authenticated %}
+        <span class="who">{{ user.username }}
+          {% if user.is_staff %} · адміністратор
+          {% elif user.groups.all %} · модератор{% endif %}
+        </span>
+        {% if user.is_staff %}
+          <a class="btn btn-sm" href="{% url 'admin:index' %}">Адмін-панель</a>
+        {% endif %}
+        <a class="btn btn-sm" href="{% url 'forum:thread_list' %}">Форум</a>
+        <form method="post" action="{% url 'logout' %}" style="display:inline;">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-ghost btn-sm">Вийти</button>
+        </form>
+      {% else %}
+        <a class="btn btn-sm" href="{% url 'login' %}">Увійти</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="tabs">
+    <a class="tab {% if request.resolver_match.url_name == 'feed' %}active{% endif %}"
+       href="{% url 'events:feed' %}">Стрічка подій</a>
+    <a class="tab {% if request.resolver_match.url_name == 'calendar' %}active{% endif %}"
+       href="{% url 'events:calendar' %}">Календар</a>
+    <a class="tab" href="{% url 'forum:thread_list' %}">← Форум</a>
+    <a class="tab" href="{% url 'home' %}">← Головна</a>
+  </div>
+
+  {% if messages %}
+    <div class="messages">
+      {% for message in messages %}
+        <div class="flash flash-{{ message.tags }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% block content %}{% endblock %}
+
+</div>
+</body>
+</html>
