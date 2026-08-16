@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% block title %}{{ vote.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4" style="max-width: 720px;">
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'voting:vote_list' %}">Голосування</a></li>
+            <li class="breadcrumb-item active">{{ vote.title }}</li>
+        </ol>
+    </nav>
+
+    {% if messages %}
+        {% for msg in messages %}
+            <div class="alert alert-{{ msg.tags }} alert-dismissible fade show">
+                {{ msg }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">{{ vote.title }}</h4>
+            {% if request.user.is_staff or request.user.is_superuser %}
+                <div class="d-flex gap-2">
+                    <a href="{% url 'voting:vote_update' vote.pk %}" class="btn btn-sm btn-outline-warning">Редагувати</a>
+                    <a href="{% url 'voting:vote_delete' vote.pk %}" class="btn btn-sm btn-outline-danger">Видалити</a>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="card-body">
+            {% if vote.description %}
+                <p class="text-muted">{{ vote.description }}</p>
+            {% endif %}
+
+            <p class="text-muted mb-0">
+                <small>Загалом проголосувало: <strong>{{ vote.total_votes }}</strong></small>
+            </p>
+        </div>
+    </div>
+
+    {# ── Форма голосування (якщо ще не голосував і авторизований) ── #}
+    {% if form %}
+        <div class="card mb-4 border-primary">
+            <div class="card-header bg-primary text-white">
+                Оберіть варіант
+            </div>
+            <div class="card-body">
+                <form method="post" action="{% url 'voting:cast_vote' vote.pk %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        {% for choice in form.option %}
+                            <div class="form-check mb-2">
+                                {{ choice.tag }}
+                                <label class="form-check-label" for="{{ choice.id_for_label }}">
+                                    {{ choice.choice_label }}
+                                </label>
+                            </div>
+                        {% endfor %}
+                        {% if form.option.errors %}
+                            <div class="text-danger small">{{ form.option.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Проголосувати</button>
+                </form>
+            </div>
+        </div>
+
+    {% elif not request.user.is_authenticated %}
+        <div class="alert alert-warning">
+            <a href="{% url 'login' %}">Увійдіть</a>, щоб взяти участь у голосуванні.
+        </div>
+    {% endif %}
+
+    {# ── Результати (видно всім) ── #}
+    <div class="card">
+        <div class="card-header">
+            Результати
+            {% if user_vote %}
+                <span class="badge bg-success ms-2">Ваш вибір: {{ user_vote.option.text }}</span>
+                <form method="post" action="{% url 'voting:cast_vote' vote.pk %}" class="d-inline ms-2">
+                    {% csrf_token %}
+                    {# Прихована форма для переголосування — просто показуємо кнопку #}
+                </form>
+                <small class="text-muted ms-2">
+                    <a href="#vote-form" data-bs-toggle="collapse" data-bs-target="#revote-section">
+                        Переголосувати
+                    </a>
+                </small>
+            {% endif %}
+        </div>
+        <div class="card-body">
+            {% for item in options_with_stats %}
+            <div class="mb-3">
+                <div class="d-flex justify-content-between">
+                    <span>
+                        {{ item.option.text }}
+                        {% if user_vote and user_vote.option == item.option %}
+                            <i class="text-success">✓ ваш вибір</i>
+                        {% endif %}
+                    </span>
+                    <span class="text-muted">{{ item.count }} ({{ item.percent }}%)</span>
+                </div>
+                <div class="progress" style="height: 20px;">
+                    <div class="progress-bar {% if user_vote and user_vote.option == item.option %}bg-success{% endif %}"
+                         role="progressbar"
+                         style="width: {{ item.percent }}%"
+                         aria-valuenow="{{ item.percent }}"
+                         aria-valuemin="0"
+                         aria-valuemax="100">
+                        {% if item.percent > 5 %}{{ item.percent }}%{% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {# ── Секція переголосування (collapse) ── #}
+    {% if user_vote and vote.is_active %}
+    <div class="collapse mt-3" id="revote-section">
+        <div class="card border-warning">
+            <div class="card-header bg-warning text-dark">Переголосувати</div>
+            <div class="card-body">
+                <form method="post" action="{% url 'voting:cast_vote' vote.pk %}">
+                    {% csrf_token %}
+                    {% with revote_form=form %}
+                    {% load django.contrib.auth.context_processors %}
+                    {% endwith %}
+                    {# Окрема форма для переголосування #}
+                    {% for opt in vote.options.all %}
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="option"
+                                   id="revote_{{ opt.pk }}" value="{{ opt.pk }}"
+                                   {% if user_vote.option == opt %}checked{% endif %}>
+                            <label class="form-check-label" for="revote_{{ opt.pk }}">
+                                {{ opt.text }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-warning mt-2">Змінити голос</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}
