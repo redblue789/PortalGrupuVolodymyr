@@ -1,33 +1,53 @@
 """
 URL configuration for PortalGroup project.
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/6.0/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+The `urlpatterns` list routes URLs to views.
+
+For more information please see:
+https://docs.djangoproject.com/en/6.0/topics/http/urls/
 """
+
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import include, path
-from django.views.generic import TemplateView
+
+# Головна сторінка з основної гілки olegix7
+from SuperSchool.views import home
+
 
 urlpatterns = [
+    # =========================
+    # ОСНОВНИЙ САЙТ — olegix7
+    # =========================
+
+    # Головна сторінка
+    path('', home, name='home'),
+
+    # Адмінка Django
     path('admin/', admin.site.urls),
-    path('surveys/', include('surveys.urls', namespace='surveys')),
-    # Тимчасові сторінки входу/виходу (стандартний Django auth),
-    # щоб можна було тестувати опитування вже зараз.
-    # Замінити/прибрати, коли буде готова власна Система автентифікації.
-    path('accounts/login/', auth_views.LoginView.as_view(), name='login'),
-    path('accounts/logout/', auth_views.LogoutView.as_view(next_page='home'), name='logout'),
-    # Тимчасова головна сторінка з кнопкою відкриття Системи опитувань.
-    # Прибрати, коли буде готова справжня головна сторінка порталу.
-    path('', TemplateView.as_view(template_name='home_temp.html'), name='home'),
+
+
+    # =========================
+    # ДОДАТКОВИЙ ФУНКЦІОНАЛ — MikoshJostar
+    # =========================
+
+    # Система опитувань
+    path(
+        'surveys/',
+        include('surveys.urls', namespace='surveys')
+    ),
+
+    # Вхід
+    path(
+        'accounts/login/',
+        auth_views.LoginView.as_view(),
+        name='login'
+    ),
+
+    # Вихід
+    path(
+        'accounts/logout/',
+        auth_views.LogoutView.as_view(next_page='home'),
+        name='logout'
+    ),
 ]

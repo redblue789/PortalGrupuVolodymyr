@@ -1,0 +1,101 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PortalGroup — Головна</title>
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+</head>
+<body>
+<header class="header">
+  <a class="logo" href="/">◆ Portal<span>Group</span></a>
+  <nav>
+    <a href="#about">Про нас</a>
+    <a href="#sections">Розділи</a>
+    <a href="#events">Події</a>
+  </nav>
+  <div class="header-actions">
+    <a class="nav-pill" href="/forum/">Форум</a>
+    <a class="nav-pill accent" href="/diary/">Електронний щоденник</a>
+  </div>
+</header>
+
+<main>
+<section class="hero">
+  <div class="hero-copy">
+    <div class="eyebrow">● КОМАНДНИЙ DJANGO-ПРОЄКТ</div>
+    <h1>Один портал.<br><span>Одна команда.</span></h1>
+    <p>Головна сторінка нашого спільного проєкту, яка об'єднує навчання, спілкування, події та інші розділи сайту.</p>
+    <div class="hero-actions">
+      <a class="primary" href="#sections">Переглянути розділи →</a>
+      <a class="secondary" href="#events">Календар подій</a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="orb"></div>
+    <div class="mini-card one">DJANGO<br><small>BACKEND</small></div>
+    <div class="mini-card two">TEAM<br><small>PROJECT</small></div>
+    <div class="mini-card three">2026<br><small>TOGETHER</small></div>
+  </div>
+</section>
+
+<section class="stats">
+  <div><b>8</b><span>Учасників</span></div>
+  <div><b>6</b><span>Проєктів</span></div>
+  <div><b>5</b><span>Розділів</span></div>
+  <div><b>∞</b><span>Ідей</span></div>
+</section>
+
+<section class="section" id="about">
+  <div class="label">01 / ПРО НАС</div>
+  <h2>Все важливе — <span>в одному місці</span></h2>
+  <p class="lead">Кожен учасник розробляє власну частину, а головна сторінка служить центральною точкою навігації. Після об'єднання гілок усі розділи зможуть працювати разом.</p>
+</section>
+
+<section class="section" id="sections">
+  <div class="label">02 / РОЗДІЛИ</div>
+  <h2>Швидкий доступ до <span>порталу</span></h2>
+  <div class="cards">
+    <a class="feature-card" href="/forum/">
+      <div class="feature-icon">◈</div><span class="tag">COMMUNITY</span>
+      <h3>Форум</h3><p>Спілкування, обговорення та обмін ідеями між учасниками.</p><strong>Перейти до форуму →</strong>
+    </a>
+    <a class="feature-card" href="/diary/">
+      <div class="feature-icon">▣</div><span class="tag">STUDY</span>
+      <h3>Електронний щоденник</h3><p>Навчальна інформація, оцінки та інші функції щоденника.</p><strong>Відкрити щоденник →</strong>
+    </a>
+    <a class="feature-card" href="/events/">
+      <div class="feature-icon">◷</div><span class="tag">EVENTS</span>
+      <h3>Події</h3><p>Розклад важливих подій, зустрічей, дедлайнів та активностей.</p><strong>Переглянути події →</strong>
+    </a>
+    <a class="feature-card muted" href="#">
+      <div class="feature-icon">⌘</div><span class="tag">TEAM</span>
+      <h3>Інші розділи</h3><p>Тут зможуть з'явитися сторінки інших учасників команди.</p><strong>Буде додано →</strong>
+    </a>
+  </div>
+</section>
+
+<section class="events section" id="events">
+  <div class="events-head">
+    <div><div class="label">03 / НАЙБЛИЖЧІ ПОДІЇ</div><h2>Не пропусти <span>важливе</span></h2></div>
+    <a class="outline" href="/events/">Усі події →</a>
+  </div>
+  <div class="event-table">
+    <div class="event-row event-header"><span>Дата</span><span>Подія</span><span>Тип</span><span>Час</span></div>
+    <div class="event-row"><div class="date"><b>12</b><small>СЕРП</small></div><div><h3>Командна зустріч</h3><p>Обговорення прогресу проєкту</p></div><span class="event-type meeting">Команда</span><time>16:00</time></div>
+    <div class="event-row"><div class="date"><b>18</b><small>СЕРП</small></div><div><h3>Перевірка проєкту</h3><p>Підготовка до об'єднання гілок</p></div><span class="event-type deadline">Дедлайн</span><time>18:30</time></div>
+    <div class="event-row"><div class="date"><b>25</b><small>СЕРП</small></div><div><h3>Презентація</h3><p>Фінальний показ командної роботи</p></div><span class="event-type presentation">Подія</span><time>14:00</time></div>
+  </div>
+  <div class="event-note"><span>↗</span><p>Це демонстраційні записи на головній сторінці. Реальні події зможуть підключити друзі у своєму розділі після об'єднання проєкту.</p></div>
+</section>
+
+<section class="cta">
+  <div><span class="label">TEAMWORK</span><h2>Створюємо<br><span>разом.</span></h2></div>
+  <a class="primary" href="#sections">Переглянути портал →</a>
+</section>
+</main>
+
+<footer><div class="footer-logo">◆ PortalGroup</div><p>Командний вебпроєкт на Django</p><small>© 2026 PortalGroup. Створено командою.</small></footer>
+</body>
+</html>
