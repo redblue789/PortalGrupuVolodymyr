@@ -1,0 +1,46 @@
+{% extends 'surveys/base.html' %}
+{% block title %}Модерація опитувань{% endblock %}
+{% block content %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Модерація опитувань</h1>
+        <a href="{% url 'surveys:create' %}" class="btn btn-primary">+ Створити опитування</a>
+    </div>
+
+    {% if surveys %}
+        <table class="table table-striped bg-white">
+            <thead>
+                <tr>
+                    <th>Назва</th>
+                    <th>Статус</th>
+                    <th>Сторінок / питань</th>
+                    <th>Проходжень</th>
+                    <th>Дії</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for survey in surveys %}
+                    <tr>
+                        <td>{{ survey.title }}</td>
+                        <td>
+                            {% if survey.is_active %}
+                                <span class="badge bg-success">Активне</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Неактивне</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ survey.pages_count }} / {{ survey.questions_count }}</td>
+                        <td>{{ survey.results.count }}</td>
+                        <td class="d-flex gap-2 flex-wrap">
+                            <a href="{% url 'surveys:results' survey.slug %}" class="btn btn-sm btn-outline-primary">Результати</a>
+                            <a href="{% url 'surveys:edit' survey.slug %}" class="btn btn-sm btn-outline-secondary">Редагувати назву</a>
+                            <a href="{% url 'admin:surveys_survey_change' survey.pk %}" class="btn btn-sm btn-outline-secondary">Сторінки / питання</a>
+                            <a href="{% url 'surveys:delete' survey.slug %}" class="btn btn-sm btn-outline-danger">Видалити</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-muted">Опитувань ще немає.</p>
+    {% endif %}
+{% endblock %}
