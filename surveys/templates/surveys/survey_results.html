@@ -1,0 +1,45 @@
+{% extends 'surveys/base.html' %}
+{% block title %}Результати — {{ survey.title }}{% endblock %}
+{% block content %}
+    <a href="{% url 'surveys:moderation_list' %}" class="btn btn-link px-0">&larr; До списку опитувань</a>
+    <h1>Результати: {{ survey.title }}</h1>
+    <p class="text-muted">Кількість респондентів: <strong>{{ respondents_count }}</strong></p>
+
+    {% if respondents_count == 0 %}
+        <p class="text-muted">Ще ніхто не пройшов це опитування.</p>
+    {% endif %}
+
+    {% for item in questions_data %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title">{{ item.question.text }}</h5>
+
+                {% if item.is_text %}
+                    <p class="text-muted small">Відповідей: {{ item.answers_count }}</p>
+                    <ul class="list-group list-group-flush">
+                        {% for answer in item.answers %}
+                            <li class="list-group-item">
+                                <span class="fw-semibold">{{ answer.result.user.username }}:</span>
+                                {{ answer.text_answer }}
+                            </li>
+                        {% empty %}
+                            <li class="list-group-item text-muted">Немає відповідей</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    {% for stat in item.stats %}
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between">
+                                <span>{{ stat.choice.text }}</span>
+                                <span class="text-muted">{{ stat.count }} ({{ stat.percent }}%)</span>
+                            </div>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar" role="progressbar" style="width: {{ stat.percent }}%;"></div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}

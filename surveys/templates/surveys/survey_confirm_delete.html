@@ -1,0 +1,11 @@
+{% extends 'surveys/base.html' %}
+{% block title %}Видалення опитування{% endblock %}
+{% block content %}
+    <h1 class="mb-4">Видалити опитування?</h1>
+    <p>Ви дійсно хочете видалити опитування «{{ object.title }}»? Усі сторінки, питання та результати проходження будуть видалені безповоротно.</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Так, видалити</button>
+        <a href="{% url 'surveys:moderation_list' %}" class="btn btn-outline-secondary">Скасувати</a>
+    </form>
+{% endblock %}
